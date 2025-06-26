@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Stealth Interview Buddy</title>
+</head>
+<body>
+  <h1>Mock Interview Bot 🎤</h1>
+
+  <input type="text" id="question" placeholder="Ask something..." style="width: 80%;" />
+  <button onclick="askGPT()">Ask</button>
+  <button onclick="startListening()">🎙️ Speak</button>
+
+  <h3>Response:</h3>
+  <pre id="response"></pre>
+
+  <script>
+    async function askGPT() {
+      const input = document.getElementById('question').value;
+      const answer = await window.electronAPI.askGPT(input);
+      document.getElementById('response').innerText = answer;
+    }
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    function startListening() {
+      recognition.start();
+    }
+
+    recognition.onresult = function(event) {
+      const transcript = event.results[0][0].transcript;
+      document.getElementById('question').value = transcript;
+    };
+  </script>
+</body>
+</html>
